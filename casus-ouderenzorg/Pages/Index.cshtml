@@ -4,7 +4,82 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Inline CSS for smooth scrolling and square images -->
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .square-img {
+        width: 100%;
+        height: 300px; /* Adjust the square size as needed */
+        object-fit: cover;
+    }
+</style>
+
+<!-- Hero Section -->
+<div id="hero" class="container py-5">
+    <div class="row align-items-center">
+        <!-- Text and Log in Button -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <h1 class="display-4 fw-bold">Welkom bij Tech4Care</h1>
+            <p class="lead">
+                Subheading that sets up context, shares more info about the website, or generally gets people psyched to keep scrolling.
+            </p>
+            <a href="#" class="btn btn-primary btn-lg">Log in</a>
+        </div>
+        <!-- Hero Image -->
+        <div class="col-md-6">
+            <img src="/Images/hero.png" class="img-fluid" alt="Caregiver assisting older person" />
+        </div>
+    </div>
+</div>
+
+<!-- "Wat doen wij?" Section -->
+<div id="watdoenwij" class="container py-5">
+    <h2 class="text-center mb-4">Wat doen wij?</h2>
+    <div class="row g-4">
+        <!-- Card 1 -->
+        <div class="col-md-4">
+            <img src="/Images/agenda.png" class="img-fluid square-img mb-3" alt="Agenda" />
+            <h3>Agenda</h3>
+            <p>
+                Placeholder text for what you’d like to highlight about the agenda.
+            </p>
+        </div>
+        <!-- Card 2 -->
+        <div class="col-md-4">
+            <img src="/Images/medicatie.png" class="img-fluid square-img mb-3" alt="Medicatie" />
+            <h3>Medicatie</h3>
+            <p>
+                Placeholder text about medication, prescription schedules, or any other important details.
+            </p>
+        </div>
+        <!-- Card 3 -->
+        <div class="col-md-4">
+            <img src="/Images/vervoer.png" class="img-fluid square-img mb-3" alt="Vervoer" />
+            <h3>Vervoer</h3>
+            <p>
+                Placeholder text about transportation services, booking rides, or anything else you’d like to detail.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- "Over ons" Section -->
+<div id="overons" class="container py-5">
+    <h2 class="text-center mb-4">Over ons</h2>
+    <div class="row align-items-center">
+        <!-- Text Content -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <p>
+                Here you can share more about your team, mission, or how your organization helps people. Add a few lines of descriptive text to give context and background.
+            </p>
+            <a href="#" class="btn btn-secondary">Secondary button</a>
+        </div>
+        <!-- Team Image -->
+        <div class="col-md-6">
+            <img src="/Images/team.png" class="img-fluid" alt="Team" />
+        </div>
+    </div>
 </div>
