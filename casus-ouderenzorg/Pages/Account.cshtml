@@ -1,0 +1,72 @@
+﻿@page
+@model AccountModel
+@{
+    ViewData["Title"] = "Mijn account";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Tech4Care</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="container my-5">
+        <!-- User Information Row -->
+        <div class="row align-items-center">
+            <!-- Profile Image (Placeholder) -->
+            <div class="col-auto">
+                <img src="/Images/pf.png"
+                     class="rounded-circle border"
+                     alt="User photo"
+                     style="width:80px; height:80px; object-fit:cover;" />
+            </div>
+            <!-- User Name -->
+            <div class="col-auto">
+                <h2 class="fw-bold mb-0">Tom van der meulen</h2>
+            </div>
+            <!-- Logout Button -->
+            <div class="col text-end">
+                <a href="#" class="btn btn-danger">Uitloggen</a>
+            </div>
+        </div>
+
+        <!-- Cards Section -->
+        <div class="mt-4">
+            <!-- Agenda Card -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body py-3">
+                    <h5 class="card-title mb-0">Agenda</h5>
+                </div>
+            </div>
+            <!-- Patiënten Card -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body py-3">
+                    <h5 class="card-title mb-0">Patiënten</h5>
+                </div>
+            </div>
+            <!-- Medicatie Card -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body py-3">
+                    <h5 class="card-title mb-0">Medicatie</h5>
+                </div>
+            </div>
+            <!-- Vervoer Card -->
+<a href="/Transport" class="text-decoration-none">
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body py-3">
+            <h5 class="card-title mb-0">Vervoer</h5>
+        </div>
+    </div>
+</a>
+
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

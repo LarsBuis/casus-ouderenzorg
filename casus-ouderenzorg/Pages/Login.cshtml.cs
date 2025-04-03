@@ -21,13 +21,13 @@ public class LoginModel : PageModel
         }
 
         // Hardcoded login credentials
-        var hardcodedUsername = "admin";
-        var hardcodedPassword = "admin";
+        var hardcodedUsername = "test";
+        var hardcodedPassword = "test";
 
         if (Input.Username == hardcodedUsername && Input.Password == hardcodedPassword)
         {
             // Login successful. Redirect to a secure page (e.g., Index).
-            return RedirectToPage("Index");
+            return RedirectToPage("Account");
         }
         else
         {
