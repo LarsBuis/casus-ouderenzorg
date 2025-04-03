@@ -1,0 +1,41 @@
+﻿@page
+@model casus_ouderenzorg.Pages.TransportDetailsModel
+@{
+    ViewData["Title"] = "Transport Details";
+}
+
+<h1 class="mb-4">Transport Details</h1>
+
+@if (Model.PlannedTransport != null)
+{
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Rit # @Model.PlannedTransport.RitNumber</h5>
+                <p><strong>Departure Time:</strong> @Model.PlannedTransport.DepartureTime.ToString("HH:mm")</p>
+                <p><strong>Departure Address:</strong> @Model.PlannedTransport.DepartureAddress</p>
+                <p><strong>Arrival Time:</strong> @Model.PlannedTransport.ArrivalTime.ToString("HH:mm")</p>
+                <p><strong>Arrival Address:</strong> @Model.PlannedTransport.ArrivalAddress</p>
+                <p><strong>Vehicle:</strong> @Model.PlannedTransport.Vehicle</p>
+                <p><strong>Driver:</strong> @Model.PlannedTransport.Driver</p>
+            </div>
+        </div>
+
+        <h3>Passengers</h3>
+    @if (Model.PlannedTransport.Passengers != null && Model.PlannedTransport.Passengers.Count > 0)
+    {
+                <ul class="list-group">
+            @foreach (var passenger in Model.PlannedTransport.Passengers)
+            {
+                            <li class="list-group-item">@passenger.Name</li>
+            }
+                </ul>
+    }
+    else
+    {
+                <p>No passengers added.</p>
+    }
+}
+else
+{
+        <p>Transport not found.</p>
+}
