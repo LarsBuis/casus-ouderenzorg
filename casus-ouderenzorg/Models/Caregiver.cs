@@ -1,8 +1,8 @@
 ﻿namespace casus_ouderenzorg.Models
 {
-    public class Passenger
+    public class Caregiver
     {
         public int Id { get; set; }
-        public Patient Patient { get; set; }
+        public string Name { get; set; }
     }
 }
