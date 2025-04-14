@@ -2,8 +2,7 @@
 
 namespace casus_ouderenzorg.Models
 {
-    // Note: "Task" is used for domain purposes.
-    // In production you might prefer another name to avoid conflicting with System.Threading.Tasks.Task.
+    // Note: While "Task" is used here for domain purposes, in production you might choose a less conflicting name.
     public class Task
     {
         public int Id { get; set; }
@@ -13,13 +12,16 @@ namespace casus_ouderenzorg.Models
 
         public string Description { get; set; } = string.Empty;
 
-        // Task-specific location (e.g., "Room 101").
+        // The location where the task is performed.
         public string Location { get; set; } = string.Empty;
 
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
 
-        // The date is retrieved via a join with DayPlanning.
+        // The Date of the task is pulled from the DayPlanning record.
         public DateTime Date { get; set; }
+
+        // New property: whether the task is marked as completed.
+        public bool IsCompleted { get; set; }
     }
 }

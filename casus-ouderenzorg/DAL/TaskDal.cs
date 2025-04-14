@@ -13,6 +13,7 @@ namespace casus_ouderenzorg.DAL
         {
             _connectionString = connectionString;
         }
+
         public List<Task> GetTasksForCaregiver(int caregiverId)
         {
             var tasks = new List<Task>();
@@ -27,6 +28,7 @@ SELECT
     t.Location,
     t.StartTime,
     t.EndTime,
+    t.IsCompleted,
     dp.[Date]
 FROM dbo.Task t
 INNER JOIN dbo.DayPlanning dp ON t.DayPlanningId = dp.Id
@@ -48,7 +50,8 @@ ORDER BY dp.[Date], t.StartTime";
                                     : reader.GetString(reader.GetOrdinal("Location")),
                                 StartTime = reader.GetTimeSpan(reader.GetOrdinal("StartTime")),
                                 EndTime = reader.GetTimeSpan(reader.GetOrdinal("EndTime")),
-                                Date = reader.GetDateTime(reader.GetOrdinal("Date"))
+                                Date = reader.GetDateTime(reader.GetOrdinal("Date")),
+                                IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted"))
                             };
                             tasks.Add(task);
                         }
@@ -56,6 +59,21 @@ ORDER BY dp.[Date], t.StartTime";
                 }
             }
             return tasks;
+        }
+
+        public void UpdateTaskCompletion(int taskId, bool isCompleted)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string query = "UPDATE dbo.Task SET IsCompleted = @IsCompleted WHERE Id = @TaskId";
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IsCompleted", isCompleted);
+                    cmd.Parameters.AddWithValue("@TaskId", taskId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
