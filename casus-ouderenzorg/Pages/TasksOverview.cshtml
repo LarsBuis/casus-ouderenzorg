@@ -1,0 +1,40 @@
+﻿@page
+@model casus_ouderenzorg.Pages.TasksOverviewModel
+@{
+    ViewData["Title"] = "Task Overview";
+}
+<div class="container mt-4">
+    <h1 class="mb-4">
+        Task Overview for Patient ID @Model.hardcodedCaregiverId
+    </h1>
+    @if (Model.Tasks != null && Model.Tasks.Count > 0)
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.Tasks)
+                {
+                    <tr>
+                        <td>@task.Date.ToString("yyyy-MM-dd")</td>
+                        <td>@task.Description</td>
+                        <td>@task.StartTime.ToString(@"hh\:mm")</td>
+                        <td>@task.EndTime.ToString(@"hh\:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No tasks found for the specified patient.
+        </div>
+    }
+</div>

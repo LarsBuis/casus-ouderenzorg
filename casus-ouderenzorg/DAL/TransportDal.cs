@@ -1,7 +1,6 @@
 ﻿using casus_ouderenzorg.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace casus_ouderenzorg.DAL
@@ -167,6 +166,135 @@ VALUES (@PlannedTransportId, @PatientId)";
                 }
             }
             return newId;
+        }
+
+        // NEW: Retrieve all planned transports along with related Driver, Vehicle, and Caregiver data.
+        // Then load associated passengers for each transport.
+        public List<PlannedTransport> GetPlannedTransports()
+        {
+            var transports = new List<PlannedTransport>();
+
+            // Use a join query to retrieve PlannedTransports along with Driver, Vehicle and Caregiver
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string query = @"
+SELECT 
+    pt.Id,
+    pt.RitNumber,
+    pt.DepartureTime,
+    pt.DepartureAddress,
+    pt.ArrivalTime,
+    pt.ArrivalAddress,
+    d.Id AS DriverId,
+    d.Name AS DriverName,
+    v.Id AS VehicleId,
+    v.Name AS VehicleName,
+    v.Capacity,
+    c.Id AS CaregiverId,
+    c.Name AS CaregiverName
+FROM PlannedTransports pt
+LEFT JOIN Drivers d ON pt.SelectedDriverId = d.Id
+LEFT JOIN Vehicles v ON pt.SelectedVehicleId = v.Id
+LEFT JOIN Caregivers c ON pt.SelectedCaregiverId = c.Id";
+
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var transport = new PlannedTransport
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                RitNumber = reader.GetString(reader.GetOrdinal("RitNumber")),
+                                DepartureTime = reader.GetDateTime(reader.GetOrdinal("DepartureTime")),
+                                DepartureAddress = reader.GetString(reader.GetOrdinal("DepartureAddress")),
+                                ArrivalTime = reader.GetDateTime(reader.GetOrdinal("ArrivalTime")),
+                                ArrivalAddress = reader.GetString(reader.GetOrdinal("ArrivalAddress"))
+                            };
+
+                            if (!reader.IsDBNull(reader.GetOrdinal("DriverId")))
+                            {
+                                transport.SelectedDriver = new Driver
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("DriverId")),
+                                    Name = reader.GetString(reader.GetOrdinal("DriverName"))
+                                };
+                            }
+
+                            if (!reader.IsDBNull(reader.GetOrdinal("VehicleId")))
+                            {
+                                transport.SelectedVehicle = new Vehicle
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("VehicleId")),
+                                    Name = reader.GetString(reader.GetOrdinal("VehicleName")),
+                                    Capacity = reader.GetInt32(reader.GetOrdinal("Capacity"))
+                                };
+                            }
+
+                            if (!reader.IsDBNull(reader.GetOrdinal("CaregiverId")))
+                            {
+                                transport.SelectedCaregiver = new Caregiver
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("CaregiverId")),
+                                    Name = reader.GetString(reader.GetOrdinal("CaregiverName"))
+                                };
+                            }
+
+                            // Add the transport to the list; we load its passengers later.
+                            transports.Add(transport);
+                        }
+                    }
+                }
+            }
+
+            // For each transport, load its passengers using a separate connection.
+            foreach (var transport in transports)
+            {
+                transport.Passengers = GetPassengersForTransport(transport.Id);
+            }
+
+            return transports;
+        }
+
+        // Helper method to retrieve passengers for a given PlannedTransport.
+        private List<Passenger> GetPassengersForTransport(int transportId)
+        {
+            var passengers = new List<Passenger>();
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string query = @"
+SELECT 
+    p.Id,
+    pat.Id AS PatId,
+    pat.Name AS PatName
+FROM Passengers p
+INNER JOIN Patients pat ON p.PatientId = pat.Id
+WHERE p.PlannedTransportId = @TransportId";
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@TransportId", transportId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var passenger = new Passenger
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Patient = new Patient
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("PatId")),
+                                    Name = reader.GetString(reader.GetOrdinal("PatName"))
+                                }
+                            };
+                            passengers.Add(passenger);
+                        }
+                    }
+                }
+            }
+            return passengers;
         }
     }
 }
