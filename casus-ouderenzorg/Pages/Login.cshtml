@@ -5,11 +5,6 @@
     ViewData["Title"] = "Login";
 }
 
-<!--
-    Optional: If you have a _Layout.cshtml, ensure it references Bootstrap
-    and includes a placeholder for the body.
-    Otherwise, you can add a Bootstrap CDN link here.
--->
 <head>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -17,8 +12,7 @@
 <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="text-center" style="max-width: 400px; width: 100%;">
         <!-- Logo or brand name -->
-        <img src="/Images/logotext.png" alt="tech4care" style="max-width: 150px; margin-bottom: 1rem;" />
-        <h2>Login</h2>
+        <img src="/Images/logotext.png" alt="tech4care" style="max-width: 350px;" />
         <p>Please enter your Login and your Password</p>
 
         <!-- Display any login error messages -->
@@ -29,7 +23,6 @@
 
         <form method="post">
             <div class="mb-3">
-                <label asp-for="Username" class="form-label"></label>
                 <div class="input-group">
                     <span class="input-group-text">
                         <i class="bi bi-person"></i> <!-- Bootstrap Icons, optional -->
@@ -39,7 +32,6 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
                 <div class="input-group">
                     <span class="input-group-text">
                         <i class="bi bi-lock"></i>
