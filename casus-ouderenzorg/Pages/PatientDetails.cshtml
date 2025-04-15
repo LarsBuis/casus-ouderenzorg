@@ -42,5 +42,8 @@
             Patient not found.
         </div>
     }
-    <a class="btn btn-secondary mt-3" href="/MyPatients">Back to My Patients</a>
+    <div class="mt-3">
+        <a class="btn btn-secondary" href="/MyPatients">Back to My Patients</a>
+        <a class="btn btn-info ms-2" href="/MedicationOverview?patientId=@Model.Patient.Id">Medication</a>
+    </div>
 </div>

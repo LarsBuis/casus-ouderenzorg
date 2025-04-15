@@ -20,6 +20,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Redirect the root URL to /login
+app.MapGet("/", () => Results.Redirect("/login"));
+
 app.MapRazorPages();
 
 app.Run();

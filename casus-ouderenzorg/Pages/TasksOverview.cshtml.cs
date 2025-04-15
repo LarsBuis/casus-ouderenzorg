@@ -26,9 +26,6 @@ namespace casus_ouderenzorg.Pages
 
         public void OnGet()
         {
-            // Use the hardcoded patient ID to load tasks.
-            //Tasks = _taskDal.GetTasksForPatient(HardcodedPatientId);
-            // To load tasks by caregiver instead, comment out the above and use:
             Tasks = _taskDal.GetTasksForCaregiver(hardcodedCaregiverId);
         }
     }
