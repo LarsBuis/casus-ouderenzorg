@@ -11,7 +11,7 @@ namespace casus_ouderenzorg.Pages
         private readonly string _connectionString;
         private readonly PatientDal _patientDal;
 
-        // The list of patients assigned to caregiver ID 1.
+        // List of patients for caregiver ID 1.
         public List<Patient> Patients { get; set; } = new List<Patient>();
 
         public MyPatientsModel(IConfiguration configuration)
@@ -22,7 +22,7 @@ namespace casus_ouderenzorg.Pages
 
         public void OnGet()
         {
-            // Retrieve patients with CaregiverId = 1.
+            // Retrieve all patients assigned to caregiver with ID = 1.
             Patients = _patientDal.GetPatientsByCaregiverId(1);
         }
     }

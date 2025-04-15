@@ -4,7 +4,7 @@
     ViewData["Title"] = "My Patients";
 }
 <div class="container mt-4">
-    <h1>My Patients (Caregiver ID: 1)</h1>
+    <h1 class="mb-4">My Patients (Caregiver ID: 1)</h1>
     @if (Model.Patients != null && Model.Patients.Count > 0)
     {
         <table class="table table-striped">
@@ -12,6 +12,9 @@
                 <tr>
                     <th>Patient ID</th>
                     <th>Name</th>
+                    <th>Background Info</th>
+                    <th>Date of Birth</th>
+                    <th>More Info</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,6 +23,11 @@
                     <tr>
                         <td>@patient.Id</td>
                         <td>@patient.Name</td>
+                        <td>@patient.BackgroundInfo</td>
+                        <td>@(patient.DateOfBirth?.ToString("yyyy-MM-dd") ?? "N/A")</td>
+                        <td>
+                            <a class="btn btn-info btn-sm" href="/PatientDetails/@patient.Id">More Info</a>
+                        </td>
                     </tr>
                 }
             </tbody>
