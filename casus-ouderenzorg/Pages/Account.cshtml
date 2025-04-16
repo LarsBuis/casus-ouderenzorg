@@ -11,6 +11,16 @@
     <title>@ViewData["Title"] - Tech4Care</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        /* Increase padding inside each card body */
+        .card .card-body {
+            padding: 2rem; /* Adjust the value as needed */
+        }
+        /* Optionally add extra padding/margin around the card itself */
+        .card {
+            margin-bottom: 1.5rem;
+        }
+    </style>
 </head>
 <body>
     <!-- Main Content -->
@@ -37,32 +47,32 @@
         <!-- Cards Section -->
         <div class="mt-4">
             <!-- Agenda Card -->
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body py-3">
-                    <h5 class="card-title mb-0">Agenda</h5>
+            <a href="/agenda" class="text-decoration-none">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <img src="/Images/dashboard/book.png" alt="Agenda Icon" style="height:24px; margin-right:10px;" />
+                        <h5 class="card-title d-inline">Agenda</h5>
+                    </div>
                 </div>
-            </div>
+            </a>
             <!-- Patiënten Card -->
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body py-3">
-                    <h5 class="card-title mb-0">Patiënten</h5>
+            <a href="/mypatients" class="text-decoration-none">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <img src="/Images/dashboard/users.png" alt="Patients Icon" style="height:24px; margin-right:10px;" />
+                        <h5 class="card-title d-inline">Patiënten</h5>
+                    </div>
                 </div>
-            </div>
-            <!-- Medicatie Card -->
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body py-3">
-                    <h5 class="card-title mb-0">Medicatie</h5>
-                </div>
-            </div>
+            </a>
             <!-- Vervoer Card -->
-<a href="/Transport" class="text-decoration-none">
-    <div class="card mb-3 shadow-sm">
-        <div class="card-body py-3">
-            <h5 class="card-title mb-0">Vervoer</h5>
-        </div>
-    </div>
-</a>
-
+            <a href="/transportoverview" class="text-decoration-none">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <img src="/Images/dashboard/carbus.png" alt="Transport Icon" style="height:24px; margin-right:10px;" />
+                        <h5 class="card-title d-inline">Vervoer</h5>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 

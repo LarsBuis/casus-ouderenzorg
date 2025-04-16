@@ -1,0 +1,56 @@
+﻿@page
+@model casus_ouderenzorg.Pages.AgendaModel
+@{
+    ViewData["Title"] = "Caregiver Agenda";
+}
+<div class="container mt-4">
+    <h1 class="mb-4">Agenda</h1>
+    <form method="post">
+        <div class="row mb-3">
+            <div class="col-sm-4">
+                <label asp-for="SelectedDate" class="form-label">Select Date</label>
+                <input asp-for="SelectedDate" type="date" class="form-control" />
+            </div>
+            <div class="col-sm-2 align-self-end">
+                <button type="submit" class="btn btn-primary">Load Tasks</button>
+            </div>
+        </div>
+
+        @if (Model.Tasks != null && Model.Tasks.Count > 0)
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                        <th>Completed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Tasks.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.Tasks[i].Date.ToString("yyyy-MM-dd")</td>
+                            <td>@Model.Tasks[i].StartTime.ToString(@"hh\:mm") - @Model.Tasks[i].EndTime.ToString(@"hh\:mm")</td>
+                            <td>@Model.Tasks[i].Location</td>
+                            <td>@Model.Tasks[i].Description</td>
+                            <td>
+                                <input type="checkbox" name="CompletedTaskIds" value="@Model.Tasks[i].Id" @(Model.Tasks[i].IsCompleted ? "checked" : "") />
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                No tasks found for the selected date.
+            </div>
+        }
+    </form>
+</div>

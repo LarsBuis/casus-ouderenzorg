@@ -1,45 +1,36 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-public class LoginModel : PageModel
+namespace casus_ouderenzorg.Pages
 {
-    [BindProperty]
-    public InputModel Input { get; set; }
-
-    public string ErrorMessage { get; set; }
-
-    public void OnGet()
+    public class LoginModel : PageModel
     {
-        // Initialize anything if needed.
-    }
-
-    public IActionResult OnPost()
-    {
-        if (!ModelState.IsValid)
-        {
-            return Page();
-        }
-
-        // Hardcoded login credentials
-        var hardcodedUsername = "test";
-        var hardcodedPassword = "test";
-
-        if (Input.Username == hardcodedUsername && Input.Password == hardcodedPassword)
-        {
-            // Login successful. Redirect to a secure page (e.g., Index).
-            return RedirectToPage("Account");
-        }
-        else
-        {
-            // Login failed, show an error message.
-            ErrorMessage = "Invalid username or password.";
-            return Page();
-        }
-    }
-
-    public class InputModel
-    {
+        [BindProperty]
         public string Username { get; set; }
+
+        [BindProperty]
         public string Password { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+        public void OnGet()
+        {
+            // Any GET logic here.
+        }
+
+        public IActionResult OnPost()
+        {
+            // Hardcoded login check
+            if (Username == "admin" && Password == "admin")
+            {
+                // On success, redirect to a page of your choice.
+                return RedirectToPage("/account");
+            }
+            else
+            {
+                ErrorMessage = "Invalid username or password.";
+                return Page();
+            }
+        }
     }
 }

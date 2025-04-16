@@ -1,0 +1,49 @@
+﻿@page
+@model casus_ouderenzorg.Pages.AddMedicationOrderModel
+@{
+    ViewData["Title"] = "Add Medication Order";
+}
+<div class="container mt-4">
+    <h1 class="mb-4">Add Medication Order</h1>
+    <form method="post">
+        <input type="hidden" asp-for="PatientId" />
+        <!-- Order Header -->
+        <div class="mb-3">
+            <label class="form-label">Order Date</label>
+            <input type="datetime-local" asp-for="OrderDate" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Status</label>
+            <input asp-for="Status" class="form-control" placeholder="e.g., Pending" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Pharmacy</label>
+            <select asp-for="PharmacyID" asp-items="Model.PharmacySelectList" class="form-control">
+                <option value="">-- Select Pharmacy --</option>
+            </select>
+        </div>
+
+        <!-- Order Line Details -->
+        <h3>Medication Details</h3>
+        <div class="mb-3">
+            <label class="form-label">Medication</label>
+            <select asp-for="MedicationID" asp-items="Model.MedicationSelectList" class="form-control">
+                <option value="">-- Select Medication --</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Dosage</label>
+            <input asp-for="Dosage" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Frequency</label>
+            <input asp-for="Frequency" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Treatment Duration</label>
+            <input asp-for="TreatmentDuration" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Create Order</button>
+        <a class="btn btn-secondary ms-2" href="/MedicationOverview?patientId=@Model.PatientId">Cancel</a>
+    </form>
+</div>

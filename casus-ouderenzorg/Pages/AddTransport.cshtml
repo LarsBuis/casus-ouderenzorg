@@ -1,62 +1,74 @@
 ﻿@page
 @model casus_ouderenzorg.Pages.AddTransportModel
 @{
-    ViewData["Title"] = "Add New Transport";
+    ViewData["Title"] = "Add Planned Transport";
 }
 
-<h1>Add New Planned Transport</h1>
-
-<form method="post">
-    <div class="mb-3">
-        <label for="RitNumber" class="form-label">Rit Number</label>
-        <input type="text" class="form-control" id="RitNumber" name="PlannedTransport.RitNumber" required />
-    </div>
-    <div class="mb-3">
-        <label for="DepartureTime" class="form-label">Departure Time</label>
-        <input type="datetime-local" class="form-control" id="DepartureTime" name="PlannedTransport.DepartureTime" required />
-    </div>
-    <div class="mb-3">
-        <label for="DepartureAddress" class="form-label">Departure Address</label>
-        <input type="text" class="form-control" id="DepartureAddress" name="PlannedTransport.DepartureAddress" required />
-    </div>
-    <div class="mb-3">
-        <label for="ArrivalTime" class="form-label">Arrival Time</label>
-        <input type="datetime-local" class="form-control" id="ArrivalTime" name="PlannedTransport.ArrivalTime" required />
-    </div>
-    <div class="mb-3">
-        <label for="ArrivalAddress" class="form-label">Arrival Address</label>
-        <input type="text" class="form-control" id="ArrivalAddress" name="PlannedTransport.ArrivalAddress" required />
-    </div>
-    <div class="mb-3">
-        <label for="Vehicle" class="form-label">Vehicle</label>
-        <input type="text" class="form-control" id="Vehicle" name="PlannedTransport.Vehicle" required />
-    </div>
-    <div class="mb-3">
-        <label for="Driver" class="form-label">Driver</label>
-        <input type="text" class="form-control" id="Driver" name="PlannedTransport.Driver" required />
-    </div>
-
-    <h3>Passengers</h3>
-    <!-- Container where passenger input fields will be appended -->
-    <div id="passengersContainer"></div>
-    <div class="mb-3">
-        <button id="addPassengerBtn" class="btn btn-secondary">Add Passenger</button>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Add Transport</button>
-</form>
-
-<script>
-    document.getElementById('addPassengerBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        var container = document.getElementById('passengersContainer');
-        var index = container.children.length;
-        var div = document.createElement('div');
-        div.className = 'mb-3';
-        // The input name follows the pattern for model binding to a collection:
-        // PlannedTransport.Passengers[index].Name
-        div.innerHTML = '<label for="Passenger_' + index + '" class="form-label">Passenger Name</label>' +
-                        '<input type="text" class="form-control" name="PlannedTransport.Passengers[' + index + '].Name" id="Passenger_' + index + '" />';
-        container.appendChild(div);
-    });
-</script>
+<div class="container mt-4">
+    <h1 class="mb-4">Add Planned Transport</h1>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="PlannedTransport.RitNumber"></label>
+            <input asp-for="PlannedTransport.RitNumber" class="form-control" />
+            <span asp-validation-for="PlannedTransport.RitNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlannedTransport.DepartureTime"></label>
+            <input asp-for="PlannedTransport.DepartureTime" type="datetime-local" class="form-control" />
+            <span asp-validation-for="PlannedTransport.DepartureTime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlannedTransport.DepartureAddress"></label>
+            <input asp-for="PlannedTransport.DepartureAddress" class="form-control" />
+            <span asp-validation-for="PlannedTransport.DepartureAddress" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlannedTransport.ArrivalTime"></label>
+            <input asp-for="PlannedTransport.ArrivalTime" type="datetime-local" class="form-control" />
+            <span asp-validation-for="PlannedTransport.ArrivalTime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlannedTransport.ArrivalAddress"></label>
+            <input asp-for="PlannedTransport.ArrivalAddress" class="form-control" />
+            <span asp-validation-for="PlannedTransport.ArrivalAddress" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Driver:</label>
+            <select asp-for="SelectedDriverId" asp-items="Model.DriverSelectList" class="form-control">
+                <option value="">-- Select a Driver --</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Vehicle:</label>
+            <select asp-for="SelectedVehicleId" asp-items="Model.VehicleSelectList" class="form-control">
+                <option value="">Select a Vehicle</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Caregiver:</label>
+            <select asp-for="SelectedCaregiverId" asp-items="Model.CaregiverSelectList" class="form-control">
+                <option value="">Select a Caregiver</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Passengers (Select Patients – max allowed is vehicle capacity minus one):</label>
+            <div>
+                @foreach (var patient in Model.PatientSelectList)
+                {
+                    <div class="form-check">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               id="patient_@patient.Value"
+                               name="SelectedPatientIds"
+                               value="@patient.Value"
+                        @(Model.SelectedPatientIds != null && Model.SelectedPatientIds.Contains(Convert.ToInt32(patient.Value)) ? "checked" : "") />
+                        <label class="form-check-label" for="patient_@patient.Value">
+                            @patient.Text
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Add Transport</button>
+    </form>
+</div>
