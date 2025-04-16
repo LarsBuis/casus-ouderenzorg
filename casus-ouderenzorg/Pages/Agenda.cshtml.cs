@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 using casus_ouderenzorg.Models;
 using casus_ouderenzorg.DAL;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using Task = casus_ouderenzorg.Models.Task;
 
 namespace casus_ouderenzorg.Pages
@@ -14,48 +14,42 @@ namespace casus_ouderenzorg.Pages
         private readonly string _connectionString;
         private readonly TaskDal _taskDal;
 
-        // Hardcoded caregiver ID (for example, 1) for demonstration.
-        public int HardcodedCaregiverId { get; set; } = 1;
-
-        // List of tasks loaded for this caregiver.
-        public List<Task> Tasks { get; set; } = new List<Task>();
-
-        // This property binds the checkbox values (the task IDs that are marked as complete)
-        [BindProperty]
-        public List<int> CompletedTaskIds { get; set; } = new List<int>();
-
         public AgendaModel(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
             _taskDal = new TaskDal(_connectionString);
         }
 
+        [BindProperty(SupportsGet = true)]
+        public DateTime SelectedDate { get; set; } = DateTime.Today;
+
+        public List<Task> Tasks { get; set; } = new List<Task>();
+
+        [BindProperty]
+        public List<int> CompletedTaskIds { get; set; } = new List<int>();
+
         public void OnGet()
         {
-            // Load tasks for the hardcoded caregiver.
-            Tasks = _taskDal.GetTasksForCaregiver(HardcodedCaregiverId);
+            Tasks = _taskDal.GetTasksByDate(SelectedDate);
         }
 
         public IActionResult OnPost()
         {
-            // Reload the tasks.
-            Tasks = _taskDal.GetTasksForCaregiver(HardcodedCaregiverId);
+            // Reload tasks for the selected date.
+            Tasks = _taskDal.GetTasksByDate(SelectedDate);
 
-            // For each task, check if its ID is in the posted CompletedTaskIds list.
+            // Update each task’s completion status.
             foreach (var task in Tasks)
             {
                 bool shouldBeCompleted = CompletedTaskIds.Contains(task.Id);
-                // Update the task completion status if needed.
                 if (task.IsCompleted != shouldBeCompleted)
                 {
                     _taskDal.UpdateTaskCompletion(task.Id, shouldBeCompleted);
                 }
             }
 
-            // Reload updated tasks.
-            Tasks = _taskDal.GetTasksForCaregiver(HardcodedCaregiverId);
-
-            // Optionally, display a message or redirect.
+            // Reload tasks after updating and return to the page.
+            Tasks = _taskDal.GetTasksByDate(SelectedDate);
             return Page();
         }
     }
