@@ -1,28 +1,22 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using casus_ouderenzorg.Models;
 using casus_ouderenzorg.DAL;
-using Microsoft.Extensions.Configuration;
+using casus_ouderenzorg.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 
-namespace casus_ouderenzorg.Pages
+namespace casus_ouderenzorg.Pages.Patients
 {
-    public class PatientDetailsModel : PageModel
+    public class DetailsModel : PageModel
     {
-        private readonly string _connectionString;
         private readonly PatientDal _patientDal;
-
-        public PatientDetailsModel(IConfiguration configuration)
+        public DetailsModel(PatientDal patientDal)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
-            _patientDal = new PatientDal(_connectionString);
+            _patientDal = patientDal;
         }
 
-        [BindProperty]
         public Patient Patient { get; set; }
 
         public IActionResult OnGet(int id)
         {
-            // Retrieve the specific patient by id.
             Patient = _patientDal.GetPatientById(id);
             if (Patient == null)
             {

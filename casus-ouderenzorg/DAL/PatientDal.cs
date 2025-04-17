@@ -1,7 +1,8 @@
-﻿using casus_ouderenzorg.Models;
-using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using casus_ouderenzorg.Models;
 
 namespace casus_ouderenzorg.DAL
 {
@@ -13,108 +14,79 @@ namespace casus_ouderenzorg.DAL
             _connectionString = connectionString;
         }
 
-        public List<Patient> GetPatientsByCaregiverId(int caregiverId)
+        public List<Patient> GetPatientsByCaregiver(int caregiverId)
         {
             var patients = new List<Patient>();
-            using (var conn = new SqlConnection(_connectionString))
+            const string sql = @"
+SELECT
+    p.PatientID,
+    p.Name,
+    p.DateOfBirth,
+    p.LocationID,
+    l.Name AS LocationName
+FROM Patient p
+LEFT JOIN Location l ON p.LocationID = l.LocationID
+WHERE p.CaregiverID = @caregiverId
+ORDER BY p.Name";
+
+            using var conn = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.Add(new SqlParameter("@caregiverId", SqlDbType.Int) { Value = caregiverId });
+
+            conn.Open();
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
             {
-                conn.Open();
-                string query = @"
-SELECT Id, 
-       Name, 
-       BackgroundInfo, 
-       Traits, 
-       DateOfBirth, 
-       Address, 
-       ContactPersonId, 
-       CaregiverId 
-FROM Patients 
-WHERE CaregiverId = @CaregiverId";
-                using (var cmd = new SqlCommand(query, conn))
+                patients.Add(new Patient
                 {
-                    cmd.Parameters.AddWithValue("@CaregiverId", caregiverId);
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            patients.Add(new Patient
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                                BackgroundInfo = reader.IsDBNull(reader.GetOrdinal("BackgroundInfo"))
-                                    ? string.Empty
-                                    : reader.GetString(reader.GetOrdinal("BackgroundInfo")),
-                                Traits = reader.IsDBNull(reader.GetOrdinal("Traits"))
-                                    ? string.Empty
-                                    : reader.GetString(reader.GetOrdinal("Traits")),
-                                DateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))
-                                    ? (DateTime?)null
-                                    : reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-                                Address = reader.GetString(reader.GetOrdinal("Address")),
-                                ContactPersonId = reader.IsDBNull(reader.GetOrdinal("ContactPersonId"))
-                                    ? (int?)null
-                                    : reader.GetInt32(reader.GetOrdinal("ContactPersonId")),
-                                CaregiverId = reader.IsDBNull(reader.GetOrdinal("CaregiverId"))
-                                    ? (int?)null
-                                    : reader.GetInt32(reader.GetOrdinal("CaregiverId"))
-                            });
-                        }
-                    }
-                }
+                    PatientID = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    DateOfBirth = reader.IsDBNull(2) ? (DateTime?)null : reader.GetDateTime(2),
+                    LocationID = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3),
+                    Location = reader.IsDBNull(3)
+                        ? null
+                        : new Location { LocationID = reader.GetInt32(3), Name = reader.GetString(4) }
+                });
             }
+
             return patients;
         }
 
         public Patient GetPatientById(int id)
         {
-            Patient patient = null;
-            using (var conn = new SqlConnection(_connectionString))
+            const string sql = @"
+SELECT
+    p.PatientID,
+    p.Name,
+    p.DateOfBirth,
+    p.LocationID,
+    l.Name AS LocationName,
+    p.BackgroundInfo
+FROM Patient p
+LEFT JOIN Location l ON p.LocationID = l.LocationID
+WHERE p.PatientID = @id";
+
+            using var conn = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.Add(new SqlParameter("@id", SqlDbType.Int) { Value = id });
+
+            conn.Open();
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
             {
-                conn.Open();
-                string query = @"
-SELECT Id, 
-       Name, 
-       BackgroundInfo, 
-       Traits, 
-       DateOfBirth, 
-       Address, 
-       ContactPersonId, 
-       CaregiverId 
-FROM Patients 
-WHERE Id = @Id";
-                using (var cmd = new SqlCommand(query, conn))
+                return new Patient
                 {
-                    cmd.Parameters.AddWithValue("@Id", id);
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            patient = new Patient
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                                BackgroundInfo = reader.IsDBNull(reader.GetOrdinal("BackgroundInfo"))
-                                    ? string.Empty
-                                    : reader.GetString(reader.GetOrdinal("BackgroundInfo")),
-                                Traits = reader.IsDBNull(reader.GetOrdinal("Traits"))
-                                    ? string.Empty
-                                    : reader.GetString(reader.GetOrdinal("Traits")),
-                                DateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))
-                                    ? (DateTime?)null
-                                    : reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-                                Address = reader.GetString(reader.GetOrdinal("Address")),
-                                ContactPersonId = reader.IsDBNull(reader.GetOrdinal("ContactPersonId"))
-                                    ? (int?)null
-                                    : reader.GetInt32(reader.GetOrdinal("ContactPersonId")),
-                                CaregiverId = reader.IsDBNull(reader.GetOrdinal("CaregiverId"))
-                                    ? (int?)null
-                                    : reader.GetInt32(reader.GetOrdinal("CaregiverId"))
-                            };
-                        }
-                    }
-                }
+                    PatientID = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    DateOfBirth = reader.IsDBNull(2) ? (DateTime?)null : reader.GetDateTime(2),
+                    LocationID = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3),
+                    Location = reader.IsDBNull(3)
+                        ? null
+                        : new Location { LocationID = reader.GetInt32(3), Name = reader.GetString(4) },
+                    BackgroundInfo = reader.IsDBNull(5) ? string.Empty : reader.GetString(5)
+                };
             }
-            return patient;
+            return null;
         }
     }
 }

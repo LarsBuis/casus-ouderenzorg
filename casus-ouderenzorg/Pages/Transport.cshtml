@@ -1,0 +1,37 @@
+﻿@page
+@model casus_ouderenzorg.Pages.Transport.TransportModel
+@{
+    Layout = "_Layout";
+}
+<h2>Transports for Caregiver #1</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Start</th>
+            <th>Return</th>
+            <th>Departure</th>
+            <th>Destination</th>
+            <th>Patient</th>
+            <th>Driver</th>
+            <th>Vehicle</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model.Transports)
+        {
+            <tr>
+                <td>@t.TransportDate.ToString("dd MMM yyyy")</td>
+                <td>@t.StartTime.ToString("hh\\:mm")</td>
+                <td>@t.ReturnTime.ToString("hh\\:mm")</td>
+                <td>@t.Departure</td>
+                <td>@t.Destination</td>
+                <td>@t.PatientName</td>
+                <td>@t.DriverName</td>
+                <td>@t.VehicleName</td>
+                <td>@t.Reason</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,7 +1,7 @@
-﻿using casus_ouderenzorg.Models;
-using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
+using casus_ouderenzorg.Models;
 using Task = casus_ouderenzorg.Models.Task;
 
 namespace casus_ouderenzorg.DAL
@@ -9,122 +9,66 @@ namespace casus_ouderenzorg.DAL
     public class TaskDal
     {
         private readonly string _connectionString;
+
         public TaskDal(string connectionString)
         {
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new InvalidOperationException("Connection string 'ZorgDb' is not configured.");
+
             _connectionString = connectionString;
         }
 
-        public List<Task> GetTasksForCaregiver(int caregiverId)
+        public List<Task> GetTasks()
         {
             var tasks = new List<Task>();
-
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                string query = @"
-SELECT 
-    t.Id,
-    t.Description,
-    t.Location,
+            const string sql = @"
+SELECT
+    t.TaskID,
+    t.TaskName,
+    t.TaskDate,
     t.StartTime,
     t.EndTime,
+    t.Description,
     t.IsCompleted,
-    dp.[Date]
-FROM dbo.Task t
-INNER JOIN dbo.DayPlanning dp ON t.DayPlanningId = dp.Id
-WHERE dp.CaregiverId = @CaregiverId
-ORDER BY dp.[Date], t.StartTime";
-                using (var cmd = new SqlCommand(query, conn))
+    t.CaregiverID,
+    c.Name AS CaregiverName,
+    t.LocationID,
+    l.Name AS LocationName,
+    t.PatientID,
+    p.Name AS PatientName
+FROM [Task] t
+LEFT JOIN Caregiver c ON t.CaregiverID = c.CaregiverID
+LEFT JOIN Location l  ON t.LocationID   = l.LocationID
+LEFT JOIN Patient p   ON t.PatientID    = p.PatientID
+WHERE t.CaregiverID = 1
+ORDER BY t.TaskDate, t.StartTime;";
+
+            using var conn = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(sql, conn);
+
+            conn.Open();
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                tasks.Add(new Task
                 {
-                    cmd.Parameters.AddWithValue("@CaregiverId", caregiverId);
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var task = new Task
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Description = reader.GetString(reader.GetOrdinal("Description")),
-                                Location = reader.IsDBNull(reader.GetOrdinal("Location"))
-                                    ? string.Empty
-                                    : reader.GetString(reader.GetOrdinal("Location")),
-                                StartTime = reader.GetTimeSpan(reader.GetOrdinal("StartTime")),
-                                EndTime = reader.GetTimeSpan(reader.GetOrdinal("EndTime")),
-                                Date = reader.GetDateTime(reader.GetOrdinal("Date")),
-                                IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted"))
-                            };
-                            tasks.Add(task);
-                        }
-                    }
-                }
+                    TaskID = reader.GetInt32(0),
+                    TaskName = reader.GetString(1),
+                    TaskDate = reader.GetDateTime(2),
+                    StartTime = reader.GetTimeSpan(3),
+                    EndTime = reader.GetTimeSpan(4),
+                    Description = reader.IsDBNull(5) ? null : reader.GetString(5),
+                    IsCompleted = reader.GetBoolean(6),
+                    CaregiverID = reader.IsDBNull(7) ? (int?)null : reader.GetInt32(7),
+                    Caregiver = reader.IsDBNull(7) ? null : new Caregiver { CaregiverID = reader.GetInt32(7), Name = reader.GetString(8) },
+                    LocationID = reader.IsDBNull(9) ? (int?)null : reader.GetInt32(9),
+                    Location = reader.IsDBNull(9) ? null : new Location { LocationID = reader.GetInt32(9), Name = reader.GetString(10) },
+                    PatientID = reader.IsDBNull(11) ? (int?)null : reader.GetInt32(11),
+                    Patient = reader.IsDBNull(11) ? null : new Patient { PatientID = reader.GetInt32(11), Name = reader.GetString(12) }
+                });
             }
+
             return tasks;
         }
-        // Retrieves tasks for a specific date.
-        public List<Task> GetTasksByDate(DateTime selectedDate)
-        {
-            var tasks = new List<Task>();
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                string query = @"
-SELECT 
-    t.Id,
-    dp.Date, 
-    t.StartTime,
-    t.EndTime,
-    t.Location,
-    t.Description,
-    t.IsCompleted
-FROM Task t
-INNER JOIN DayPlanning dp ON t.DayPlanningId = dp.Id
-WHERE CAST(dp.Date AS DATE) = @SelectedDate";
-                using (var cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@SelectedDate", selectedDate.Date);
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            tasks.Add(new Task
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                // Read the Date from the DayPlanning table.
-                                Date = reader.GetDateTime(reader.GetOrdinal("Date")),
-                                StartTime = reader.GetTimeSpan(reader.GetOrdinal("StartTime")),
-                                EndTime = reader.GetTimeSpan(reader.GetOrdinal("EndTime")),
-                                Location = reader.IsDBNull(reader.GetOrdinal("Location"))
-                                                ? string.Empty
-                                                : reader.GetString(reader.GetOrdinal("Location")),
-                                Description = reader.IsDBNull(reader.GetOrdinal("Description"))
-                                                ? string.Empty
-                                                : reader.GetString(reader.GetOrdinal("Description")),
-                                IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted"))
-                            });
-                        }
-                    }
-                }
-            }
-            return tasks;
-        }
-
-
-
-        // Updates the completion status of a task.
-        public void UpdateTaskCompletion(int taskId, bool isCompleted)
-        {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                string query = "UPDATE Task SET IsCompleted = @IsCompleted WHERE Id = @TaskId";
-                using (var cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@IsCompleted", isCompleted);
-                    cmd.Parameters.AddWithValue("@TaskId", taskId);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
     }
 }

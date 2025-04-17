@@ -1,56 +1,47 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
-using casus_ouderenzorg.Models;
 using casus_ouderenzorg.DAL;
+using casus_ouderenzorg.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Task = casus_ouderenzorg.Models.Task;
 
-namespace casus_ouderenzorg.Pages
+namespace casus_ouderenzorg.Pages.Agenda
 {
-    public class AgendaModel : PageModel
+    public class IndexModel : PageModel
     {
-        private readonly string _connectionString;
         private readonly TaskDal _taskDal;
+        private const int CaregiverId = 1;
 
-        public AgendaModel(IConfiguration configuration)
+        public IndexModel(TaskDal taskDal)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
-            _taskDal = new TaskDal(_connectionString);
+            _taskDal = taskDal;
         }
 
         [BindProperty(SupportsGet = true)]
-        public DateTime SelectedDate { get; set; } = DateTime.Today;
+        public string Date { get; set; } = string.Empty;
 
         public List<Task> Tasks { get; set; } = new List<Task>();
-
-        [BindProperty]
-        public List<int> CompletedTaskIds { get; set; } = new List<int>();
+        public string SelectedDate { get; set; } = string.Empty;
+        public string DisplayDate { get; set; } = string.Empty;
 
         public void OnGet()
         {
-            Tasks = _taskDal.GetTasksByDate(SelectedDate);
-        }
-
-        public IActionResult OnPost()
-        {
-            // Reload tasks for the selected date.
-            Tasks = _taskDal.GetTasksByDate(SelectedDate);
-
-            // Update each task’s completion status.
-            foreach (var task in Tasks)
+            // Parse the selected date or default to today
+            DateTime selected;
+            if (!DateTime.TryParse(Date, out selected))
             {
-                bool shouldBeCompleted = CompletedTaskIds.Contains(task.Id);
-                if (task.IsCompleted != shouldBeCompleted)
-                {
-                    _taskDal.UpdateTaskCompletion(task.Id, shouldBeCompleted);
-                }
+                selected = DateTime.Today;
             }
 
-            // Reload tasks after updating and return to the page.
-            Tasks = _taskDal.GetTasksByDate(SelectedDate);
-            return Page();
+            SelectedDate = selected.ToString("yyyy-MM-dd");
+            DisplayDate = selected.ToString("dd MMMM yyyy");
+
+            Tasks = _taskDal.GetTasks()
+                .Where(t => t.CaregiverID == CaregiverId && t.TaskDate.Date == selected.Date)
+                .OrderBy(t => t.StartTime)
+                .ToList();
         }
     }
 }
