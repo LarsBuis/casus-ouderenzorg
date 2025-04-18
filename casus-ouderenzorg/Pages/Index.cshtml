@@ -11,11 +11,10 @@
 </head>
 <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="text-center" style="max-width: 400px; width: 100%;">
-        <!-- Logo or brand name -->
-        <img src="/Images/logotext.png" alt="tech4care" style="max-width: 350px;" />
-        <p>Please enter your Login and your Password</p>
 
-        <!-- Display any login error messages -->
+        <img src="/Images/logotext.png" alt="tech4care" style="max-width: 350px;" />
+        <p>Vul je username en wachtwoord in</p>
+
         @if (!string.IsNullOrEmpty(Model.ErrorMessage))
         {
             <div class="alert alert-danger">@Model.ErrorMessage</div>
@@ -25,7 +24,7 @@
             <div class="mb-3">
                 <div class="input-group">
                     <span class="input-group-text">
-                        <i class="bi bi-person"></i> <!-- Bootstrap Icons, optional -->
+                        <i class="bi bi-person"></i>
                     </span>
                     <input asp-for="Username" class="form-control" placeholder="Username or Email" />
                 </div>
@@ -41,8 +40,8 @@
             </div>
 
             <div class="d-flex justify-content-between">
-                <div></div> <!-- spacer -->
-                <a href="#" class="link-secondary">Forgot password?</a>
+                <div></div>
+                <a href="#" class="link-secondary">wachtwoord vergeten?</a>
             </div>
 
             <button type="submit" class="btn btn-primary mt-3 w-100">Login</button>

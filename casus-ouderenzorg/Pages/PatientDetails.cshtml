@@ -4,13 +4,11 @@
     Layout = "_Layout";
 }
 <h2>@Model.Patient.Name</h2>
-<p><strong>Date of Birth:</strong> @(Model.Patient.DateOfBirth.HasValue ? Model.Patient.DateOfBirth.Value.ToString("dd MMM yyyy") : "—")</p>
-<p><strong>Location:</strong> @Model.Patient.Location?.Name</p>
-<h3>Background Info</h3>
+<p><strong>Geboortedatum:</strong> @(Model.Patient.DateOfBirth.HasValue ? Model.Patient.DateOfBirth.Value.ToString("dd MMM yyyy") : "—")</p>
+<p><strong>Locatie:</strong> @Model.Patient.Location?.Name</p>
+<h3>Achtergrond Info</h3>
 <p>@Model.Patient.BackgroundInfo</p>
 
 <p>
-    <a href="/Orders/@Model.Patient.PatientID" class="btn btn-primary">
-        View Medication Orders
-    </a>
+    <a class="btn ms-2" style="background-color: #3A4C51; border-color: #3A4C51; color: white;" href="/Orders/@Model.Patient.PatientID">Bekijk bestellingen</a>
 </p>

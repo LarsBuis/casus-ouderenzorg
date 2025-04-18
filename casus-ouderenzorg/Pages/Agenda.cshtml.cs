@@ -28,7 +28,6 @@ namespace casus_ouderenzorg.Pages.Agenda
 
         public void OnGet()
         {
-            // Parse the selected date or default to today
             DateTime selected;
             if (!DateTime.TryParse(Date, out selected))
             {

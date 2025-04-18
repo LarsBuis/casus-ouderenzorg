@@ -15,15 +15,12 @@ namespace casus_ouderenzorg.Pages
 
         public void OnGet()
         {
-            // Any GET logic here.
         }
 
         public IActionResult OnPost()
         {
-            // Hardcoded login check
             if (Username == "admin" && Password == "admin")
             {
-                // On success, redirect to a page of your choice.
                 return RedirectToPage("/account");
             }
             else
