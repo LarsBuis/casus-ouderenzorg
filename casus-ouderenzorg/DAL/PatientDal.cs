@@ -14,6 +14,32 @@ namespace casus_ouderenzorg.DAL
             _connectionString = connectionString;
         }
 
+        public List<Patient> GetAllPatients()
+        {
+            var patients = new List<Patient>();
+            const string sql = @"
+SELECT
+    PatientID,
+    Name
+FROM Patient
+ORDER BY Name";
+
+            using var conn = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(sql, conn);
+
+            conn.Open();
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                patients.Add(new Patient
+                {
+                    PatientID = reader.GetInt32(0),
+                    Name = reader.GetString(1)
+                });
+            }
+            return patients;
+        }
+
         public List<Patient> GetPatientsByCaregiver(int caregiverId)
         {
             var patients = new List<Patient>();

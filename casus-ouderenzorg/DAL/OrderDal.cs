@@ -14,6 +14,30 @@ namespace casus_ouderenzorg.DAL
             _connectionString = connectionString;
         }
 
+        public void CreateOrder(Order order)
+        {
+            const string sql = @"
+INSERT INTO [Order] 
+    (PatientID, OrderDate, Medication, Amount, Concentration, Status)
+VALUES
+    (@PatientID, @OrderDate, @Medication, @Amount, @Concentration, @Status)";
+
+            using var conn = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(sql, conn);
+
+            cmd.Parameters.AddWithValue("@PatientID", order.PatientID);
+            cmd.Parameters.AddWithValue("@OrderDate", order.OrderDate);
+            cmd.Parameters.AddWithValue("@Medication", order.Medication);
+            cmd.Parameters.AddWithValue("@Amount", (object?)order.Amount ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Concentration", (object?)order.Concentration ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Status", (object?)order.Status ?? DBNull.Value);
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
+
+
         public List<Order> GetOrdersByPatient(int patientId)
         {
             var orders = new List<Order>();
