@@ -1,0 +1,38 @@
+﻿@page "{patientId:int}"
+@model casus_ouderenzorg.Pages.Patients.CreateOrderModel
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h2>Create Order for Patient @Model.Order.PatientID</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Order.PatientID" />
+
+    <div class="form-group">
+        <label asp-for="Order.Medication"></label>
+        <input asp-for="Order.Medication" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.Amount"></label>
+        <input asp-for="Order.Amount" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.Concentration"></label>
+        <input asp-for="Order.Concentration" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.Status"></label>
+        <input asp-for="Order.Status" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Order</button>
+    <a asp-page="./Orders"
+       asp-route-id="@Model.Order.PatientID"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+</form>

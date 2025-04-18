@@ -60,5 +60,39 @@ ORDER BY t.TransportDate, t.StartTime";
             }
             return list;
         }
+
+        public void CreateTransport(Transport transport)
+        {
+            const string sql = @"
+INSERT INTO Transport
+   (CaregiverID, PatientID, DriverID, VehicleID,
+    TransportDate, StartTime, ReturnTime,
+    Departure, Destination, Reason)
+VALUES
+   (@CaregiverID, @PatientID, @DriverID, @VehicleID,
+    @TransportDate, @StartTime, @ReturnTime,
+    @Departure, @Destination, @Reason)";
+
+            using var conn = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(sql, conn);
+
+            cmd.Parameters.AddWithValue("@CaregiverID", transport.CaregiverID);
+            cmd.Parameters.AddWithValue("@PatientID", transport.PatientID);
+            cmd.Parameters.AddWithValue("@DriverID", transport.DriverID);
+            cmd.Parameters.AddWithValue("@VehicleID", transport.VehicleID);
+            cmd.Parameters.AddWithValue("@TransportDate", transport.TransportDate);
+            cmd.Parameters.AddWithValue("@StartTime", transport.StartTime);
+            cmd.Parameters.AddWithValue("@ReturnTime", transport.ReturnTime);
+            cmd.Parameters.AddWithValue("@Departure",
+                (object?)transport.Departure ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Destination",
+                (object?)transport.Destination ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Reason",
+                (object?)transport.Reason ?? DBNull.Value);
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
     }
 }
