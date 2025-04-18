@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create Order";
 }
 
-<h2>Create Order for Patient @Model.Order.PatientID</h2>
+<h2>Order maken voor Patiënt @Model.Order.PatientID</h2>
 
 <form method="post">
     <input type="hidden" asp-for="Order.PatientID" />
@@ -29,10 +29,10 @@
         <input asp-for="Order.Status" class="form-control" />
     </div>
 
-    <button type="submit" class="btn btn-success">Save Order</button>
+    <button type="submit" class="btn btn-success">Order opslaan</button>
     <a asp-page="./Orders"
        asp-route-id="@Model.Order.PatientID"
-       class="btn btn-secondary">
-        Cancel
+       class="btn btn-danger">
+        Annuleren
     </a>
 </form>
