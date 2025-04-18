@@ -12,41 +12,33 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
-        /* Increase padding inside each card body */
         .card .card-body {
-            padding: 2rem; /* Adjust the value as needed */
+            padding: 2rem;
         }
-        /* Optionally add extra padding/margin around the card itself */
         .card {
             margin-bottom: 1.5rem;
         }
     </style>
 </head>
 <body>
-    <!-- Main Content -->
     <div class="container my-5">
-        <!-- User Information Row -->
         <div class="row align-items-center">
-            <!-- Profile Image (Placeholder) -->
+
             <div class="col-auto">
                 <img src="/Images/pf.png"
                      class="rounded-circle border"
                      alt="User photo"
                      style="width:80px; height:80px; object-fit:cover;" />
             </div>
-            <!-- User Name -->
             <div class="col-auto">
                 <h2 class="fw-bold mb-0">Tom van der meulen</h2>
             </div>
-            <!-- Logout Button -->
             <div class="col text-end">
                 <a href="#" class="btn btn-danger">Uitloggen</a>
             </div>
         </div>
 
-        <!-- Cards Section -->
         <div class="mt-4">
-            <!-- Agenda Card -->
             <a href="/agenda" class="text-decoration-none">
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -55,7 +47,6 @@
                     </div>
                 </div>
             </a>
-            <!-- Patiënten Card -->
             <a href="/mypatients" class="text-decoration-none">
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -64,8 +55,7 @@
                     </div>
                 </div>
             </a>
-            <!-- Vervoer Card -->
-            <a href="/transportoverview" class="text-decoration-none">
+            <a href="/transport" class="text-decoration-none">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <img src="/Images/dashboard/carbus.png" alt="Transport Icon" style="height:24px; margin-right:10px;" />

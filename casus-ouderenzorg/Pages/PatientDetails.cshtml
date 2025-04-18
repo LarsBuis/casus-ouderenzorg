@@ -1,49 +1,14 @@
 ﻿@page "{id:int}"
-@model casus_ouderenzorg.Pages.PatientDetailsModel
+@model casus_ouderenzorg.Pages.Patients.DetailsModel
 @{
-    ViewData["Title"] = "Patient Details";
+    Layout = "_Layout";
 }
-<div class="container mt-4">
-    <h1 class="mb-4">Patient Details</h1>
-    @if (Model.Patient != null)
-    {
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">@Model.Patient.Name</h5>
-                <p class="card-text">
-                    <strong>Background Info:</strong> @Model.Patient.BackgroundInfo
-                </p>
-                <p class="card-text">
-                    <strong>Traits:</strong> @Model.Patient.Traits
-                </p>
-                <p class="card-text">
-                    <strong>Date of Birth:</strong> @(Model.Patient.DateOfBirth?.ToString("yyyy-MM-dd") ?? "N/A")
-                </p>
-                <p class="card-text">
-                    <strong>Address:</strong> @Model.Patient.Address
-                </p>
-                @if (Model.Patient.ContactPerson != null)
-                {
-                    <p class="card-text">
-                        <strong>Contact Person:</strong> @Model.Patient.ContactPerson.Name (<a href="mailto:@Model.Patient.ContactPerson.Email">@Model.Patient.ContactPerson.Email</a>,
-                        @Model.Patient.ContactPerson.PhoneNumber)
-                    </p>
-                }
-                else
-                {
-                    <p class="card-text"><strong>Contact Person:</strong> Not assigned</p>
-                }
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-warning">
-            Patient not found.
-        </div>
-    }
-    <div class="mt-3">
-        <a class="btn btn-secondary" href="/MyPatients">Back to My Patients</a>
-        <a class="btn btn-info ms-2" href="/MedicationOverview?patientId=@Model.Patient.Id">Medication</a>
-    </div>
-</div>
+<h2>@Model.Patient.Name</h2>
+<p><strong>Geboortedatum:</strong> @(Model.Patient.DateOfBirth.HasValue ? Model.Patient.DateOfBirth.Value.ToString("dd MMM yyyy") : "—")</p>
+<p><strong>Locatie:</strong> @Model.Patient.Location?.Name</p>
+<h3>Achtergrond Info</h3>
+<p>@Model.Patient.BackgroundInfo</p>
+
+<p>
+    <a class="btn ms-2" style="background-color: #3A4C51; border-color: #3A4C51; color: white;" href="/Orders/@Model.Patient.PatientID">Bekijk bestellingen</a>
+</p>

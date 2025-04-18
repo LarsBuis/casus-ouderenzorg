@@ -1,9 +1,18 @@
-﻿namespace casus_ouderenzorg.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace casus_ouderenzorg.Models
 {
     public class Vehicle
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        [Key]
+        public int VehicleID { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; } = string.Empty;
+
         public int Capacity { get; set; }
+
+        public ICollection<Transport> Transports { get; set; } = new List<Transport>();
     }
 }

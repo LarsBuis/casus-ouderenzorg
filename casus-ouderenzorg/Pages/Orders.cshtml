@@ -1,0 +1,29 @@
+﻿@page "/Orders/{id:int}"
+@model casus_ouderenzorg.Pages.Patients.OrdersModel
+@{
+    Layout = "_Layout";
+}
+<h2>Bestelde medicatie voor #@Model.PatientId</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Order Datum</th>
+            <th>Medicatie</th>
+            <th>Hoeveelheid</th>
+            <th>Concentratie</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model.Orders)
+        {
+            <tr>
+                <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                <td>@order.Medication</td>
+                <td>@(order.Amount.HasValue ? order.Amount.ToString() : "—")</td>
+                <td>@(order.Concentration ?? "—")</td>
+                <td>@(order.Status ?? "—")</td>
+            </tr>
+        }
+    </tbody>
+</table>

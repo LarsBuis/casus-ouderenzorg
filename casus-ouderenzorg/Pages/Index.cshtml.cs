@@ -5,16 +5,29 @@ namespace casus_ouderenzorg.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        [BindProperty]
+        public string Username { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
+        [BindProperty]
+        public string Password { get; set; }
+
+        public string ErrorMessage { get; set; }
 
         public void OnGet()
         {
+        }
 
+        public IActionResult OnPost()
+        {
+            if (Username == "admin" && Password == "admin")
+            {
+                return RedirectToPage("/account");
+            }
+            else
+            {
+                ErrorMessage = "Invalid username or password.";
+                return Page();
+            }
         }
     }
 }

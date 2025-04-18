@@ -1,41 +1,30 @@
 ﻿@page
-@model casus_ouderenzorg.Pages.MyPatientsModel
+@model casus_ouderenzorg.Pages.Patients.mypatientsModel
 @{
-    ViewData["Title"] = "Mijn Patiënten";
+    Layout = "_Layout";
 }
-<div class="container mt-4">
-    <h1 class="mb-4">Mijn Patiënten</h1>
-    @if (Model.Patients != null && Model.Patients.Count > 0)
-    {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Naam</th>
-                    <th>Geboortedatum</th>
-                    <th>Adres</th>
-                    <th> </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var patient in Model.Patients)
-                {
-                    <tr>
-                        <td>@patient.Name</td>
-                        <td>@(patient.DateOfBirth?.ToString("yyyy-MM-dd") ?? "N/A")</td>
-                        <td>@patient.Address</td>
-                        <td>
-                            <a class="btn btn-sm" style="background-color: #3A4C51; border-color: #3A4C51; color: white;" href="/PatientDetails/@patient.Id">More Info</a>
+<h2>Patients for Caregiver #1</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Geboortedatum</th>
+            <th>Locatie</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var patient in Model.Patients)
+        {
+            <tr>
+                <td>@patient.Name</td>
+                <td>@(patient.DateOfBirth.HasValue ? patient.DateOfBirth.Value.ToString("dd MMM yyyy") : "—")</td>
+                <td>@patient.Location?.Name</td>
+                <td>
+                    <a href="/patientdetails/@patient.PatientID" class="btn btn-info">More Info</a>
 
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="alert alert-info">
-            No patients have been assigned.
-        </div>
-    }
-</div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

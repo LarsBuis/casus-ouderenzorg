@@ -1,27 +1,41 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace casus_ouderenzorg.Models
 {
-    // Note: While "Task" is used here for domain purposes, in production you might choose a less conflicting name.
     public class Task
     {
-        public int Id { get; set; }
+        [Key]
+        public int TaskID { get; set; }
 
-        // Foreign key linking this task to a DayPlanning record.
-        public int DayPlanningId { get; set; }
+        [Required]
+        [MaxLength(100)]
+        public string TaskName { get; set; } = string.Empty;
 
-        public string Description { get; set; } = string.Empty;
+        [Required]
+        public DateTime TaskDate { get; set; }
 
-        // The location where the task is performed.
-        public string Location { get; set; } = string.Empty;
-
+        [Required]
         public TimeSpan StartTime { get; set; }
+
+        [Required]
         public TimeSpan EndTime { get; set; }
 
-        // The Date of the task is pulled from the DayPlanning record.
-        public DateTime Date { get; set; }
+        [MaxLength(500)]
+        public string? Description { get; set; }
 
-        // New property: whether the task is marked as completed.
         public bool IsCompleted { get; set; }
+
+        public int? CaregiverID { get; set; }
+        [ForeignKey("CaregiverID")]
+        public Caregiver? Caregiver { get; set; }
+
+        public int? LocationID { get; set; }
+        [ForeignKey("LocationID")]
+        public Location? Location { get; set; }
+
+        public int? PatientID { get; set; }
+        [ForeignKey("PatientID")]
+        public Patient? Patient { get; set; }
     }
 }
