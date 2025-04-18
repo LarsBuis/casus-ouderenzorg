@@ -1,4 +1,65 @@
 ﻿@page
-@model casus_ouderenzorg.Pages.CreateTransportModel
+@model casus_ouderenzorg.Pages.Transport.CreateTransportModel
 @{
+    ViewData["Title"] = "Create Transport";
 }
+
+<h2>Create Transport</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Transport.CaregiverID" />
+
+    <div class="form-group">
+        <label asp-for="Transport.PatientID"></label>
+        <select asp-for="Transport.PatientID" class="form-control" asp-items="Model.PatientList">
+            <option value="">-- Select Patient --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Transport.DriverID"></label>
+        <select asp-for="Transport.DriverID" class="form-control" asp-items="Model.DriverList">
+            <option value="">-- Select Driver --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Transport.VehicleID"></label>
+        <select asp-for="Transport.VehicleID" class="form-control" asp-items="Model.VehicleList">
+            <option value="">-- Select Vehicle --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Transport.TransportDate"></label>
+        <input asp-for="Transport.TransportDate" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Transport.StartTime"></label>
+        <input asp-for="Transport.StartTime" type="time" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Transport.ReturnTime"></label>
+        <input asp-for="Transport.ReturnTime" type="time" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Transport.Departure"></label>
+        <input asp-for="Transport.Departure" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Transport.Destination"></label>
+        <input asp-for="Transport.Destination" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Transport.Reason"></label>
+        <input asp-for="Transport.Reason" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-page="Transport" class="btn btn-secondary">Cancel</a>
+</form>

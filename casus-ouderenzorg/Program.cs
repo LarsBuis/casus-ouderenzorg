@@ -22,6 +22,13 @@ builder.Services.AddScoped<OrderDal>(sp =>
 builder.Services.AddScoped<TransportDal>(sp =>
     new TransportDal(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<DriverDal>(sp =>
+    new DriverDal(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<VehicleDal>(sp =>
+    new VehicleDal(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline...
